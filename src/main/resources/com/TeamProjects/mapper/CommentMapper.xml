@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.TeamProjects.mapper.CommentMapper">
+  
+  <select id="getMaxconum" resultType="int">
+  SELECT NVL(MAX(CONUM),0) FROM COMMENTS
+  </select>
+
+  <insert id="commentWrite" parameterType="com.TeamProjects.dto.CommentDTO">
+     INSERT INTO COMMENTS VALUES(#{conum},#{co_bonum},#{cowriter},#{cocontent},SYSDATE)  
+  </insert>
+  
+  <select id="commentList" parameterType="int" resultMap="comment">
+   SELECT * FROM COMMENTS WHERE CO_BONUM=#{co_bonum} ORDER BY CONUM
+  </select>
+  
+  <!-- 게시글 삭제시 댓글 삭제 -->
+  <delete id="commentDelete" parameterType="int">
+  DELETE FROM COMMENTS WHERE CO_BONUM=#{co_bonum}
+  </delete>
+  
+  <delete id="commentDelete2" parameterType="int">
+  DELETE FROM COMMENTS WHERE CONUM = #{conum}
+  </delete>
+  
+  <select id="commentDelList" parameterType="int" resultMap="comment">
+  SELECT * FROM COMMENTS WHERE CO_BONUM=#{co_bonum} ORDER BY CONUM
+  </select>
+  
+ 
+  
+  
+  <resultMap type="com.TeamProjects.dto.CommentDTO" id="comment">
+  <result property="conum" column="CONUM"/>
+  <result property="co_bonum" column="CO_BONUM"/>
+  <result property="cowriter" column="COWRITER"/>
+  <result property="cocontent" column="COCONTENT"/>
+  <result property="codate" column="CODATE"/>
+   <result property="originNo" column="ORIGINNO"/>
+    <result property="groupOrd" column="GROUPORD"/>
+     <result property="groupLayer" column="GROUPLAYER"/>
+     
+  </resultMap>
+  
+  
+  
+  </mapper>

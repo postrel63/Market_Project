@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.TeamProjects.mapper.CartMapper">
+  
+   <!-- 장바구니 담기 -->
+ <insert id="cartadd" parameterType="com.TeamProjects.dto.CartDTO"> 
+ 	 INSERT INTO CART(CACODE,MID,PRCODE,PRCOUNT) VALUES(#{mid},#{mid},#{prcode},#{prcount})
+ </insert>
+ 
+ <!-- 장바구니 보기 -->
+ <select id="cartView" parameterType="String" resultMap="cart" >
+	select rownum canum,cart.* from(select * from cart c inner join products p on c.prcode=p.prcode where mid=#{mid,jdbcType=VARCHAR}) cart
+ </select>
+ 
+ <!-- 장바구니 담긴 물건갯수 -->
+ <select id="cartcount" parameterType="String" resultType="int">
+ 	SELECT COUNT(*) FROM CART WHERE MID=#{loginId}
+ </select>
+ 
+ <!-- 장바구니 물건 삭제 -->
+ <delete id="cartdel" parameterType="com.TeamProjects.dto.CartDTO">
+	DELETE FROM CART WHERE MID=#{mid} AND PRCODE=#{prcode} 
+ </delete>
+ 
+ <!-- 장바구니 중복 확인 -->
+ <select id="cartdupli" parameterType="com.TeamProjects.dto.CartDTO" resultType="int">
+ 	SELECT COUNT(*) FROM CART WHERE MID=#{mid} AND PRCODE=#{prcode} 
+ </select>
+ 
+ <!-- 장바구니 총 가격 -->
+ <select id="cartallprice" parameterType="String" resultType="int">
+SELECT NVL(SUM(P.PRPRICE*C.PRCOUNT),0) FROM CART C INNER JOIN PRODUCTS P ON C.PRCODE=P.PRCODE WHERE mid=#{mid,jdbcType=VARCHAR}
+ </select>
+ 
+ <!-- 장바구니 리스트 출력(html-output이용) -->
+ <select id="cartList" parameterType="String" resultMap="cart">
+ select rownum canum,cart.* from(select * from cart c inner join products p on c.prcode=p.prcode where mid=#{mid,jdbcType=VARCHAR}) cart
+ </select>
+ 
+  
+  <!--  게시글쓰기 구매목록&상점코드 불러오기 --> 
+ <select id="getWriteInfo" resultMap="cart">
+  select STCODE,PRNAME,CACODE from CART, PRODUCTS where CART.PRCODE = PRODUCTS.PRCODE AND CART.MID = #{mid}
+ </select> 
+  
+  
+  <resultMap type="com.TeamProjects.dto.CartDTO" id="cart"  >
+		<result property="canum" column="CANUM" />
+		<result property="cacode" column="CACODE" />
+		<result property="mid" column="MID"/>
+		<result property="prprice" column="PRPRICE" />
+		<result property="prcount" column="PRCOUNT" />
+		<result property="prcode" column="PRCODE" />
+		<result property="prname" column="PRNAME" />
+		<result property="primage" column="PRIMAGE" />
+		<result property="prsaleper" column="PRSALEPER" />
+	</resultMap>
+  
+  </mapper>

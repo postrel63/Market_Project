@@ -1,0 +1,285 @@
+:root {
+  /* color */
+  --blue--color: #2979ff;
+  --blue--dark--color: #004ecb;
+  --black--color: #072b3d;
+  --black--light--color: #365468;
+  --black--dark--color: #000018;
+  --grey--color: #eeeeee;
+  --white--color: #ffffff;
+
+  /* size */
+  --size--padding: 12px;
+  --size--small--padding: 10px;
+
+  /* font-size */
+  --font--big: 18px;
+  --font--middle: 14px;
+  --font--small: 12px;
+  --font--micro: 10px;
+}
+
+* {
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "Noto Sans KR", sans-serif;
+}
+ul,
+ol {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+p {
+  margin-bottom: 0;
+}
+button {
+  background: none;
+  border: 0px;
+  padding: 0;
+}
+
+.orderPage {
+  background-color: var(--grey--color);
+  margin-top: 20px;
+  padding: 0px;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-menu {
+  background-color: var(--black--color);
+  padding: var(--size--padding);
+  color: var(--white--color);
+  display: flex;
+  justify-content: space-between;
+}
+.top-menu .bi {
+	margin:auto 0;
+	color:green;
+	padding-right:var(--size--padding);
+}
+.Main {
+  display: flex;
+  flex: 1 0 auto;
+}
+.sidebar {
+  width: 30%;
+  display: flex;
+}
+.sidebar .side-leftbar {
+  background-color: var(--black--dark--color);
+  margin-bottom: 0px;
+  border: 1px solid var(--black--dark--color);
+}
+
+.sidebar .side-leftbar li {
+  font-size: var(--font--micro);
+}
+
+.sidebar .side-leftbar li button {
+  padding: var(--size--padding);
+  display: flex;
+  flex-direction: column;
+  color: var(--white--color);
+  cursor:pointer;
+}
+
+.sidebar .side-leftbar li button div{
+  display: flex;
+  flex-direction: column;
+  color: var(--white--color);
+}
+
+.sidebar .side-leftbar li div button{
+  background-color:var(--grey--color);
+  color: var(--black--dark--color);
+  cursor:pointer;
+  
+}
+
+.sidebar .side-leftbar li button i {
+  margin: 0 auto;
+  color:var(--grey--color);
+  font-size: calc(var(--size--padding)*1.3);
+}
+
+.side-rightbar {
+  width: 100%;
+  border-right: 1px solid var(--black--dark--color);
+  border-bottom: 1px solid var(--black--dark--color);
+  background-color: var(--black--light--color);
+}
+
+.side-rightbar .orderDivision {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--size--small--padding);
+  border-top: 1px solid var(--black--dark--color);
+  border-bottom: 1px solid var(--black--dark--color);
+  background-color: var(--black--color);
+}
+
+.side-rightbar .orderDivision li {
+  padding-right: 5px;
+  color: var(--white--color);
+}
+
+.sidebar .orderList > p {
+  padding: calc(var(--size--padding) / 2) var(--size--padding);
+  color: var(--blue--dark--color);
+  background-color: var(--black--color);
+  font-size: var(--font--small);
+  border-bottom: 1px solid var(--black--dark--color);
+}
+
+.sidebar .orderList ol li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--black--dark--color);
+  padding: var(--size--padding);  
+  color: var(--white--color);
+  align-items: center;
+}
+
+.sidebar .orderList ol label{
+	width:100%;
+	height:100%;
+	margin-bottom:0px;
+	display:flex;
+	justify-content:space-between;  
+	
+	}
+.sidebar .orderList ol label p{
+	display:inline-block;
+}
+.sidebar .orderList ol input[type="radio"]{
+  	display:none;  
+	}
+.sidebar .orderList ol label{
+	display: inline-block;
+	cursor:pointer;
+	
+	
+}
+.sidebar .orderList ol label input[type="radio"]:checked{
+	background-color:var(--grey--color);
+	color:var(--black--color);
+	
+	}
+	
+
+
+.sidebar .orderList ol li p{
+	color:var(--white--color);
+}
+
+.sidebar .orderList ol li span {
+  font-size: var(--font--small);
+}
+
+.content {
+  display: flex;
+  padding: var(--size--padding);
+  width: 70%;
+  flex-direction: column;
+}
+
+.content .content-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: var(--size--padding);
+}
+
+.content .content-header .orderState p {
+  font-size: var(--font--big);
+  color: var(--blue--dark--color);
+}
+
+.content .content-header .orderChoice input[type=text] {
+	width: 30px;
+}
+
+.content .content-body {
+  display: flex;
+  height: 100%;
+}
+
+.content .content-body .content-left {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+.content .content-body .content-left .requestMemo {
+  border: 1px solid var(--black--light--color);
+  height: 35%;
+  margin-bottom: var(--size--padding);
+  background-color: var(--white--color);
+  padding: var(--size--padding);
+}
+
+.content .content-body .content-left strong {
+  padding-bottom: var(--size--padding);
+}
+
+.content .content-body .content-left .requestMemo ol {
+  display: flex;
+}
+
+.content .content-body .content-left .requestMemo .divtable-title {
+  padding: 10px 20px 10px 0;
+}
+
+.content .content-body .content-left .requestMemo .divtable-content {
+  padding: 10px 0;
+}
+
+.content .content-body .content-left .orderinfo {
+  border: 1px solid var(--black--light--color);
+  height: 65%;
+  background-color: var(--white--color);
+  padding: var(--size--padding);
+}
+
+.content .content-body .orderinfo ul {
+  display: flex;
+}
+
+.content .content-body .orderinfo ul strong {
+  padding-bottom: var(--size--padding);
+}
+
+.content .content-body .orderinfo ul .prname {
+  width: 60%;
+}
+
+.content .content-body .orderinfo ul .prcount {
+  width: 10%;
+}
+
+.content .content-body .orderinfo ul .prprice {
+  width: 30%;
+}
+
+.content .content-body .ordererinfo .allprice {
+  border-top: 1px solid var(--black--light--color);
+  position: absolute;
+  bottom: 0;
+}
+
+.content .content-body .ordererinfo {
+  width: 40%;
+  border: 1px solid var(--black--light--color);
+  margin-left: var(--size--padding);
+  background-color: var(--white--color);
+  padding: var(--size--padding);
+}
+
+.content .content-body .ordererinfo p {
+  font-weight: bold;
+  margin-top: var(--size--padding);
+}
+
+
+

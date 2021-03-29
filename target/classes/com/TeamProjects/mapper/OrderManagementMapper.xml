@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.TeamProjects.mapper.OrderManagementMapper">
+  
+  
+  <!-- 신규주문 리스트 불러오기 -->
+  <select id="orderlist" parameterType="String" resultMap="orderlist">
+ 	SELECT CHCODE,TO_CHAR(chdate, 'HH24:MI') as chdate,ALLPRCOUNT,allprprice FROM CHECKSLIST WHERE STCODE=#{stcode} AND DELISTATE='주문접수중'
+  </select>
+  
+  <!-- 진행중 주문 리스트 불러오기 -->
+  <select id="afootorderlist" parameterType="String" resultMap="orderlist">
+ 	SELECT CHCODE,TO_CHAR(chdate, 'HH24:MI') as chdate,ALLPRCOUNT,allprprice FROM CHECKSLIST WHERE STCODE=#{stcode} AND DELISTATE='배달준비중' OR DELISTATE= '배달중'
+  </select>
+  
+  <!-- 주문완료 리스트 불러오기 -->
+  <select id="orderEnd" parameterType="String" resultMap="orderlist">
+ 	SELECT CHCODE,TO_CHAR(chdate, 'HH24:MI') as chdate,ALLPRCOUNT,allprprice FROM CHECKSLIST WHERE STCODE=#{stcode} AND DELISTATE='배달완료'
+  </select>
+  
+  <!-- 주문 상세정보 불러오기 -->
+  <select id="orderdetail" parameterType="String" resultMap="order">
+	select distinct cl.chcode,allprprice,allprprice,chmemo,receiveaddr,receivepn,TO_CHAR(chdate, 'YYYY-MM-DD HH24:MI:SS') as chdate,stname,chmemo,deliway,chway,allprcount,mid,delistate,delitime
+	from checkslist cl inner join checksinfo ci on cl.chcode=ci.chcode inner join products p on ci.prcode=p.prcode inner join store s on cl.stcode = s.stcode where cl.chcode=#{chcode}
+  </select>
+  
+  <!-- 주문 상세보기에서 주문 리스트 불러오기 -->
+<select id="orderdetailList" parameterType="String" resultMap="orderdetaillist">
+	select prname,prcount,allprprice,prprice from checkslist cl inner join checksinfo ci on cl.chcode=ci.chcode inner join products p on ci.prcode=p.prcode inner join store s on cl.stcode = s.stcode where cl.chcode=#{chcode}
+</select>
+  
+  <!-- 주문접수중 -> 배달준비중   현재시간에서 +1시간으로 저장하는 방법? TO_CHAR(SYSDATE+20/24/60,'YYYYMMDDhh24miss')  ,,,delitime=sysdate + (INTERVAL #{delitime} MINUTE) -->
+ <update id="newToafoot" parameterType="com.TeamProjects.dto.OrderManagementDTO" >
+ 		update checkslist set delistate ='배달준비중', delitime=#{delitime}  where chcode = #{chcode} and stcode = #{stcode}
+ </update>
+ 
+  <!-- 배달준비중 -> 배달중 -->
+ <update id="afootToStart" parameterType="com.TeamProjects.dto.OrderManagementDTO" >
+ 		update checkslist set delistate ='배달중' where chcode = #{chcode} and stcode = #{stcode}
+ </update>
+ 
+  <!-- 배달중 -> 배달완료 -->
+ <update id="deliEnd" parameterType="com.TeamProjects.dto.OrderManagementDTO" >
+ 		update checkslist set delistate ='배달완료' where chcode = #{chcode} and stcode = #{stcode}
+ </update>
+ 
+ <!-- 주문 삭제 list -->
+ <delete id="orderdeletelist" parameterType="String">
+ 		delete from checkslist where chcode = #{chcode}
+ </delete>
+ 
+ <!-- 주문 삭제 info -->
+ <delete id="orderdeleteinfo" parameterType="String">
+ 		delete from checksinfo where chcode = #{chcode}
+ </delete>
+ 
+ <!-- 새로운 주문 -->
+ <select id="neworder" parameterType="String" resultMap="orderlist">
+ 		SELECT CHCODE,TO_CHAR(chdate, 'HH24:MI') as chdate,ALLPRCOUNT,allprprice FROM CHECKSLIST WHERE chcode=#{chcode} AND DELISTATE='주문접수중'
+ </select>
+ 
+ <select id="myorderlist" parameterType="String" resultMap="order">
+ 		select Max(prname) as prname,TO_CHAR(cl.chdate, 'HH24:MI') as chdate,cl.chcode,cl.allprcount,cl.allprprice,cl.chway,cl.delitime,cl.delistate from checkslist cl inner join checksinfo ci on cl.chcode = ci.chcode inner join products p on p.prcode=ci.prcode where mid=#{loginId} group  by cl.chdate,cl.chcode,cl.allprcount,cl.allprprice,cl.chway,cl.delitime,cl.delistate
+ </select>
+ 
+
+ 
+    <resultMap type="com.TeamProjects.dto.OrderManagementDTO" id="order"  >
+		<result property="mid" column="MID" />
+		<result property="chcode" column="CHCODE" />
+		<result property="chprcount" column="CHPRCOUNT" />
+		<result property="allprprice" column="ALLPRPRICE"/>
+		<result property="allprcount" column="ALLPRCOUNT"/>
+		<result property="chmemo" column="CHMEMO" />
+		<result property="prname" column="PRNAME" />
+		<result property="prcount" column="PRCOUNT" />
+		<result property="prprice" column="PRPRICE" />
+		<result property="receiveaddr" column="RECEIVEADDR" />
+		<result property="receivepn" column="RECEIVEPN" />
+		<result property="chdate" column="CHDATE" />
+		<result property="stname" column="STNAME" />
+		<result property="stcode" column="STCODE" />
+		<result property="deliway" column="DELIWAY" />
+		<result property="delistate" column="DELISTATE" />
+		<result property="chway" column="CHWAY" />
+		<result property="delitime" column="DELITIME" />
+	</resultMap>
+	
+	<resultMap type="com.TeamProjects.dto.OrderlistDTO" id="orderlist">
+		<result property="chcode" column="CHCODE" />
+		<result property="chdate" column="CHDATE" />
+		<result property="prrice" column="PRPRICE" />
+		<result property="allprcount" column="ALLPRCOUNT" />
+		<result property="allprprice" column="ALLPRPRICE" />
+	</resultMap>
+	
+	<resultMap type="com.TeamProjects.dto.OrderManagementListDTO" id="orderdetaillist">
+		<result property="prname" column="PRNAME" />
+		<result property="prcount" column="PRCOUNT" />
+		<result property="allprcount" column="ALLPRCOUNT" />
+	
+	</resultMap>
+	
+  
+  </mapper>
