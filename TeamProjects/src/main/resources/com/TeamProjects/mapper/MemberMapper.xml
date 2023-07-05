@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.TeamProjects.mapper.MemberMapper">
+
+	<select id="selectIDcheck" parameterType="String"
+		resultType="String">
+		SELECT MID FROM MEMBERS WHERE MID=#{mid}
+	</select>
+
+	<insert id="insertJoin"
+		parameterType="com.TeamProjects.mapper.MemberMapper">
+		INSERT INTO MEMBERS
+		(MID,MNAME,MPASSWORD,MBIRTH,MGENDER,MEMAIL,MPHONE,MLABEL,MADDRESS,MCLASS,MDATE)
+		VALUES(#{mid},#{mname},#{mpassword},#{mbirth},#{mgender},#{memail},#{mphone},#{mlabel},#{maddress},#{mclass},sysdate)
+	</insert>
+
+	<select id="selectLoginID"
+		parameterType="com.TeamProjects.dto.MemberDTO" resultType="String">
+		SELECT MID FROM MEMBERS WHERE MID=#{mid} AND MPASSWORD=#{mpassword}
+	</select>
+
+	<select id="selectView" parameterType="String"
+		resultMap="Members">
+		SELECT * FROM MEMBERS WHERE MID=#{mid}
+	</select>
+
+	<select id="memberView" parameterType="String"
+		resultMap="Members">
+		SELECT * FROM MEMBERS WHERE MID=#{mid}
+	</select>
+
+	<update id="memberModifyProcess"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET MID=#{mid}, MNAME=#{mname},
+		MPASSWORD=#{mpassword}, MBIRTH=#{mbirth}, MGENDER=#{mgender},
+		MEMAIL=#{memail}, MPHONE=#{mphone}, MLABEL=#{mlabel},
+		MADDRESS=#{maddress} WHERE MID=#{mid}
+	</update>
+
+	<update id="mphoneUpdate"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET
+		MPHONE=#{mphone} WHERE MID=#{mid}
+	</update>
+
+	<update id="memailUpdate"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET
+		MEMAIL=#{memail} WHERE MID=#{mid}
+	</update>
+
+	<update id="mnameUpdate"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET
+		MNAME=#{mname} WHERE MID=#{mid}
+	</update>
+
+	<update id="maddressUpdate"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET
+		MADDRESS=#{maddress} WHERE MID=#{mid}
+	</update>
+
+	<update id="mbirthUpdate"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET
+		MBIRTH=#{mbirth} WHERE MID=#{mid}
+	</update>
+	
+	<update id="PwUpdate"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET
+		MPASSWORD=#{mpassword} WHERE MID=#{mid}
+	</update>
+
+	<update id="memberProfileUpload"
+		parameterType="com.TeamProjects.dto.MemberDTO">
+		UPDATE MEMBERS SET MFILENAME=#{mfilename} WHERE
+		MID=#{mid}
+	</update>
+
+	<select id="getProfile" parameterType="String"
+		resultType="String">
+		SELECT MFILENAME FROM MEMBERS WHERE MID=#{mid}
+	</select>
+
+	<delete id="memberDelete" parameterType="String">
+		DELETE FROM MEMBERS
+		WHERE Mid=#{mid}
+	</delete>
+
+	<select id="selectPwCheck" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM MEMBERS
+		WHERE MID = #{inputMid}
+		AND
+		MPASSWORD = #{inputPw}
+	</select>
+
+	<select id="mfileSelect" parameterType="String"
+		resultType="String">
+		SELECT MFILENAME FROM MEMBERS WHERE MID=#{mid}
+	</select>
+
+	<select id="selectminfo"
+		parameterType="com.TeamProjects.dto.MemberDTO" resultType="int">
+		SELECT COUNT(*) FROM MEMBERS WHERE MID=#{mid} AND MPASSWORD=#{mpassword}
+	</select>
+
+
+    <select id="memberCheck" parameterType="String" resultType="String">
+       SELECT*FROM MEMBERS WHERE MID=#{mid} AND MCLASS='11'
+    </select>
+    
+    <select id="getAreaname" parameterType="String" resultType="String">
+      SELECT SUBSTR(MADDRESS,4,3) FROM MEMBERS WHERE MID=#{mid}
+    </select>
+    
+      <select id="getmemberinfo" parameterType="String" resultMap="Members">
+    	SELECT * FROM MEMBERS WHERE MID=#{sessionKey}
+    </select>
+    
+    <select id="memberMyList" parameterType="String">
+    SELECT*FROM CHECKLIST WHERE MID=#{loginId}
+    </select>
+    
+    <select resultType="String" parameterType="int" id="getMfilename">
+    SELECT MFILENAME FROM MEMBERS, BOARD WHERE MEMBERS.MNAME = BOARD.BOWRITER AND BOARD.BONUM=#{bonum} 
+    </select>
+    
+	<resultMap type="com.TeamProjects.dto.MemberDTO" id="Members">
+		<result property="mid" column="MID" />
+		<result property="mname" column="MNAME" />
+		<result property="mpassword" column="MPASSWORD" />
+		<result property="mbirth" column="MBIRTH" />
+		<result property="mgender" column="MGENDER" />
+		<result property="memail" column="MEMAIL" />
+		<result property="mphone" column="MPHONE" />
+		<result property="mlabel" column="MLABEL" />
+		<result property="maddress" column="MADDRESS" />
+		<result property="mclass" column="MCLASS" />
+		<result property="mdate" column="MDATE" />
+		<result property="mfilename" column="MFILENAME" />
+	</resultMap>
+</mapper>

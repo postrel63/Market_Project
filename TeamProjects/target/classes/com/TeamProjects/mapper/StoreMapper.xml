@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.TeamProjects.mapper.StoreMapper">
+  
+  <!-- 가게 리스트 보기 -->
+  <select id="storeView"  parameterType="String" resultMap="store">
+  		SELECT * FROM STORE WHERE STCODE=#{stcode}
+  </select>
+  
+  <!-- 가게 상세보기 -->
+    <select id="productsView"  parameterType="String" resultMap="products">
+  		SELECT * FROM PRODUCTS WHERE STCODE=#{stcode} AND PRCHECK='TRUE'
+  </select>
+  
+  <!-- 내 점포 보기 -->
+  <select id="myStorelist" parameterType="String" resultMap="store">
+  		SELECT STCODE,STNAME,MARKETNAME FROM STORE WHERE BID=#{loginId}
+  </select>
+  
+  
+  <insert id="storeJoin" parameterType="com.TeamProjects.dto.StoreDTO">
+    INSERT INTO STORE(STCODE,BID,AREANAME,MARKETNAME,STNAME,STCATEGORY,STADDRESS,STPHONE)
+    VALUES(#{stcode},#{bid},#{areaname},#{marketname},#{stname},#{stcategory},#{staddress},#{stphone})
+ 
+  </insert>
+
+<select id="storeList" parameterType="String" resultMap="store">
+SELECT STNAME,STCODE FROM STORE WHERE BID=#{bid}
+</select>
+
+<select id="getstoreView" parameterType="String" resultType="com.TeamProjects.dto.StoreDTO">
+SELECT * FROM STORE WHERE STCODE=#{stcode}
+</select>
+<update id="stimgUpload" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET STIMAGE=#{stimage} WHERE STCODE=#{stcode}
+</update>
+
+<select id="selectimgfile" parameterType="String" resultType="String">
+SELECT STIMAGE FROM STORE WHERE STCODE=#{stcode}
+</select>
+
+<update id="updateOp" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET OPERATETIME=#{operatetime} WHERE STCODE=#{stcode}
+</update>
+
+<update id="updatephone" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET STPHONE=#{stphone} WHERE STCODE=#{stcode}
+</update>
+
+<update id="updatenote" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET STNOTE=#{stnote} WHERE STCODE=#{stcode}
+</update>
+
+<update id="updatecategory" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET STCATEGORY=#{stcategory} WHERE STCODE=#{stcode}
+</update>
+
+
+<update id="updateaddress" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET STADDRESS=#{staddress} WHERE STCODE=#{stcode}
+</update>
+
+<select id="productsList" parameterType="String" resultMap="products">
+SELECT PRCODE,STCODE,PRNAME,PRSTOCK,PRIMAGE,PRPRICE,PRNOTE FROM PRODUCTS WHERE STCODE=#{stcode}
+</select>
+
+<insert id="productjoin" parameterType="com.TeamProjects.dto.ProductsDTO">
+INSERT INTO PRODUCTS(PRCODE,STCODE,PRNAME,PRSTOCK,PRIMAGE,PRPRICE,PRNOTE)
+VALUES(#{prcode},#{stcode},#{prname},#{prstock},#{primage},#{prprice},#{prnote})
+</insert>
+
+<select id="productModifyinfo" parameterType="String" resultMap="products">
+SELECT*FROM PRODUCTS WHERE PRCODE=#{prcode}
+</select>
+
+<select id="selectprimgfile" parameterType="String" resultMap="products">
+SELECT PRIMAGE FROM PRODUCTS WHERE PRCODE=#{prcode} 
+</select>
+
+<update id="prModifyUpdate" parameterType="com.TeamProjects.dto.ProductsDTO">
+UPDATE PRODUCTS SET PRNAME=#{prname},PRSTOCK=#{prstock},PRIMAGE=#{primage},PRPRICE=#{prprice},PRNOTE=#{prnote} WHERE PRCODE=#{prcode}
+</update>
+
+<select id="selectPrimage" parameterType="String" resultType="String">
+SELECT PRIMAGE FROM PRODUCTS WHERE PRCODE=#{prcode}
+
+</select>
+
+<delete id="deleteProduct" parameterType="String">
+DELETE FROM PRODUCTS WHERE PRCODE=#{prcode}
+</delete>
+
+<delete id="deleteStore" parameterType="String">
+DELETE FROM STORE WHERE STCODE=#{stcode}
+</delete>
+
+<delete id="deleteProductList" parameterType="String">
+DELETE FROM PRODUCTS WHERE STCODE=#{stcode}
+</delete>
+
+<update id="prcheckbox" parameterType="com.TeamProjects.dto.ProductsDTO">
+UPDATE PRODUCTS SET PRCHECK=#{prcheck} WHERE PRCODE=#{prcode}
+</update>
+
+<update id="stcheckUpdate" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET OPERATE=#{operate} WHERE STCODE=#{stcode}
+</update>
+
+<select id="stoperatecheck" parameterType="String" resultType="String">
+SELECT OPERATE FROM STORE WHERE STCODE=#{stcode}
+</select>
+
+<select id="productCount" parameterType="String" resultType="int">
+SELECT COUNT(*) FROM PRODUCTS WHERE STCODE=#{stcode} AND PRCHECK='TRUE'
+</select>
+
+<select id="getmarketList" parameterType="String" resultMap="store">
+SELECT * FROM STORE WHERE AREANAME LIKE #{area} 
+</select>
+
+<select id="changemarket" parameterType="com.TeamProjects.dto.StoreDTO" resultMap="store">
+SELECT * FROM STORE WHERE AREANAME=#{areaname} AND STCATEGORY=#{stcategory} 
+</select>
+
+<select id="getmarketListAll" resultMap="store">
+SELECT * FROM STORE 
+</select>
+
+<select id="changemarketAll" parameterType="String" resultMap="store">
+SELECT * FROM STORE WHERE STCATEGORY=#{stcategory} 
+</select>
+
+
+<select id="marketopen" parameterType="String" resultMap="store">
+SELECT * FROM STORE WHERE OPERATE='OPEN' AND AREANAME=#{areaname}
+</select>
+
+
+<select id="marketopenAll" resultMap="store">
+SELECT * FROM STORE WHERE OPERATE='OPEN' 
+</select>
+
+<select id="storeLike" parameterType="com.TeamProjects.dto.LikeDTO" resultType="String">
+SELECT*FROM STORELIKE WHERE MID=#{mid} AND STCODE=#{stcode} 
+</select>
+
+<update id="likePlusUpdate" parameterType="String">
+UPDATE STORE SET STORELIKE=STORELIKE+1 WHERE STCODE=#{stcode}
+</update>
+
+<update id="likeMinusUpdate" parameterType="String">
+UPDATE STORE SET STORELIKE=STORELIKE-1 WHERE STCODE=#{stcode}
+</update>
+
+<insert id="likeInsert" parameterType="com.TeamProjects.dto.LikeDTO">
+INSERT INTO STORELIKE VALUES(#{mid},#{stcode})
+</insert>
+
+<delete id="likeDelete">
+DELETE FROM STORELIKE WHERE MID=#{mid} AND STCODE=#{stcode}
+</delete>
+
+<select id="storeLikeCount" parameterType="String" resultType="String">
+SELECT STORELIKE FROM STORE WHERE STCODE=#{stcode}
+</select>
+
+<select id="selectLike" parameterType="String" resultMap="store">
+SELECT*FROM STORE WHERE AREANAME=#{areaname} ORDER BY STORELIKE DESC
+</select>
+
+<select id="selectLikeAll" resultMap="store">
+SELECT*FROM STORE ORDER BY STORELIKE DESC
+</select>
+
+<select id="marketopencategory" parameterType="com.TeamProjects.dto.StoreDTO" resultMap="store">
+SELECT*FROM STORE WHERE AREANAME=#{areaname} AND STCATEGORY=#{stcategory} AND OPERATE='OPEN'
+</select>
+
+<select id="selectLikecategory" parameterType="com.TeamProjects.dto.StoreDTO" resultMap="store">
+SELECT*FROM STORE WHERE AREANAME=#{areaname} AND STCATEGORY=#{stcategory} ORDER BY STORELIKE DESC
+</select>
+
+<select id="getmarketListcategory" parameterType="com.TeamProjects.dto.StoreDTO" resultMap="store">
+SELECT * FROM STORE WHERE STCATEGORY=#{stcategory} AND AREANAME LIKE #{areaname} 
+</select>
+
+<select id="marketopencategoryAll" parameterType="String" resultMap="store">
+SELECT*FROM STORE WHERE  STCATEGORY=#{stcategory} AND OPERATE='OPEN'
+</select>
+
+
+<select id="selectLikecategoryAll" parameterType="String" resultMap="store">
+SELECT*FROM STORE WHERE  STCATEGORY=#{stcategory} ORDER BY STORELIKE DESC
+</select>
+
+<select id="getmarketListcategoryAll" parameterType="String" resultMap="store">
+SELECT * FROM STORE WHERE STCATEGORY=#{stcategory} 
+</select>
+
+<select id="getborankList" parameterType="com.TeamProjects.dto.BoardDTO" resultType="int">
+SELECT COUNT(*) FROM BOARD WHERE STCODE=#{stcode}
+</select>
+
+<select id="getborank" parameterType="com.TeamProjects.dto.BoardDTO" resultType="String">
+SELECT TO_CHAR(SUM(BORANK)/#{borank},9.9) FROM BOARD WHERE STCODE=#{stcode}
+</select>
+
+<update id="strankupdate" parameterType="com.TeamProjects.dto.StoreDTO">
+UPDATE STORE SET STRANK=#{strank} WHERE STCODE=#{stcode}
+</update>
+<select id="getreviewcount" parameterType="String" resultType="int">
+SELECT COUNT(*) FROM BOARD WHERE STCODE=#{stcode}
+</select>
+
+<select id="selectstrank" resultMap="store" >
+SELECT*FROM STORE ORDER BY STRANK DESC
+</select>
+
+<select id="selectstrankAll" parameterType="String" resultMap="store">
+SELECT*FROM STORE WHERE STCATEGORY=#{stcategory} ORDER BY STRANK DESC
+</select>
+
+<select id="selectstrankcategory" parameterType="com.TeamProjects.dto.StoreDTO" resultMap="store">
+SELECT*FROM STORE WHERE AREANAME=#{areaname} AND STCATEGORY=#{stcategory} ORDER BY STRANK DESC
+</select>
+
+<select id="selectstrankarea" parameterType="String" resultMap="store">
+SELECT*FROM STORE WHERE AREANAME=#{areaname} ORDER BY STRANK DESC
+</select>
+  
+ 
+  <!-- 사업자인지 아닌지 -->
+	<select id="memst" parameterType="String" resultType="int">
+		SELECT MCLASS FROM MEMBERS WHERE MID=#{loginId}
+	</select>
+	
+	<!-- stcode -->
+	<select id="stcode" parameterType="String" resultType="String">
+		SELECT STCODE FROM STORE WHERE BID=#{loginId}
+	</select>
+	
+	
+
+	<resultMap type="com.TeamProjects.dto.StoreDTO" id="store">
+		<result property="stcode" column="STCODE" />
+		<result property="bid" column="BID" />
+		<result property="areaname" column="AREANAME" />
+		<result property="marketname" column="MARKETNAME"/>
+		<result property="stname" column="STNAME" />
+		<result property="stcategory" column="STCATEGORY" />
+		<result property="staddress" column="STADDRESS" />
+		<result property="stphone" column="STPHONE" />
+		<result property="stimage" column="STIMAGE" />
+		<result property="stnote" column="STNOTE" />
+		<result property="strank" column="STRANK" />
+		<result property="operate" column="OPERATE" />
+		<result property="operatetime" column="OPERATETIME" />
+		<result property="storelike" column="STORELIKE" />
+		
+	</resultMap>
+	
+	<resultMap type="com.TeamProjects.dto.ProductsDTO" id="products">
+		<result property="prcode" column="PRCODE" />
+		<result property="stcode" column="STCODE" />
+		<result property="prname" column="PRNAME" />
+		<result property="prstock" column="PRSTOCK" />
+		<result property="primage" column="PRIMAGE" />
+		<result property="prprice" column="PRPRICE" />
+		<result property="prnote" column="PRNOTE" />
+		<result property="prcheck" column="PRCHECK" />
+	</resultMap>
+	
+	
+
+  </mapper>

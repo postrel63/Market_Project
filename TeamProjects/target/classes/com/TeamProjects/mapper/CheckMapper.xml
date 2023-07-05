@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.TeamProjects.mapper.CheckMapper">
+  
+  <!-- checkslist에 주문자 정보 담기 -->
+  <insert id="insertorder" parameterType="com.TeamProjects.dto.CheckDTO">
+  	INSERT INTO CHECKSLIST(CHCODE,MID,STCODE,RECEIVENAME,RECEIVEPN,RECEIVEADDR1,RECEIVEADDR2,RECEIVEADDR3,RECEIVEADDR,ALLPRPRICE,ALLPRCOUNT,CHDATE,CHWAY,CHMEMO,DELIWAY)
+VALUES(#{chcode},#{mid},#{stcode},#{receivename},#{receivepn},#{receivepostcode},#{receiveaddr},#{receivedetailaddr},#{receiveaddress},#{prallprice},#{prallcount},SYSDATE,#{chway},#{ordermemo},#{deliway})
+  </insert>
+  
+  <!-- 장바구니에 있는 품목들을 주문상세보기 테이블에 넣기 -->
+  <insert id="insertorderdetail" parameterType="com.TeamProjects.dto.CheckDetailDTO">
+  	INSERT INTO CHECKSINFO(CHINFONUM ,CHCODE,PRCODE,PRCOUNT) SELECT CHINFONUM_SEQ.NEXTVAL,#{chcode},prcode,prcount from cart WHERE MID=#{mid}
+  </insert>
+  
+  <!-- 상품 구매 후 장바구니 비우기 -->
+  <delete id="deletecart" parameterType="String">
+  	DELETE FROM CART WHERE MID=#{loginId}
+  </delete>
+  
+  <!-- 상품 주문서에 담긴 상품 총 개수를 담기위해 총 개수 파악 -->
+  <select id="cartallcount" parameterType="String" resultType="int">
+  	SELECT COUNT(*) FROM CART WHERE MID=#{loginId}
+  </select>
+  
+   <!-- 접속중인 가게 -->
+  <select id="getstname" parameterType="com.TeamProjects.dto.StoreDTO" resultType="String">
+  	SELECT STNAME FROM STORE WHERE STCODE=#{stcode} AND BID=#{bid}
+  </select>
+  
+
+  
+  </mapper>

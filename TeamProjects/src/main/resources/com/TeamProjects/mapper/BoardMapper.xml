@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.TeamProjects.mapper.BoardMapper">
+
+     <!-- 전체게시글 -->  
+    <!-- <select id="boardListPaging" resultMap="board" parameterType="com.TeamProjects.dto.BoardDTO">
+       SELECT * FROM(SELECT ROWNUM RN, BOARD_LIST_BYBOTYPE.*,STORE.STADDRESS, STORE.MARKETNAME FROM STORE, BOARD_LIST_BYBOTYPE 
+       WHERE STORE.STCODE=BOARD_LIST_BYBOTYPE.STCODE) WHERE RN BETWEEN #{startrow} AND #{endrow}
+    </select> -->
+    
+    
+     <select id="boardListPaging" resultMap="board" parameterType="com.TeamProjects.dto.BoardDTO">
+    SELECT * FROM(SELECT ROWNUM RN, BOARD_LIST_BYBOTYPE.* FROM BOARD_LIST_BYBOTYPE) WHERE RN BETWEEN #{startrow} AND #{endrow} 
+     </select>
+    
+    <!-- 전체게시글 개수 -->    
+     <select id="getBoardListCnt" resultType="int">
+    SELECT COUNT(*) FROM BOARD
+    </select>
+    
+    <!-- 베스트게시글  -->
+   <select id="boardListPaging2" resultMap="board" parameterType="com.TeamProjects.dto.BoardDTO">
+    SELECT * FROM(SELECT ROWNUM RN, BOARD_HIT.*,STORE.STADDRESS, STORE.MARKETNAME FROM  STORE, BOARD_HIT WHERE STORE.STCODE=BOARD_HIT.STCODE)
+    WHERE RN BETWEEN #{startrow} AND #{endrow}
+    </select>
+    
+   <!--  베스트게시글 개수 -->
+   <select id="getBoardListCnt2" resultType="int">
+    SELECT COUNT(*) FROM BOARD
+    </select>
+   
+   <!-- 게시글 저장 -->
+    <insert id="boardInsert" parameterType="com.TeamProjects.dto.BoardDTO">
+    INSERT INTO BOARD(BONUM, STCODE, BOTITLE, BOWRITER,  BOCONTENT, BODATE, BOHIT, BORECOMMEND, BOFILENAME, BORANK, BOTYPE)
+    VALUES(#{bonum},#{stcode},#{botitle},#{bowriter},#{bocontent},SYSDATE,#{bohit},#{borecommend},#{bofilename},#{borank},#{botype})    
+    </insert>
+    
+   <!--  게시글 최댓값 번호 가져오기  -->
+    <select id="boardNum" resultType="int">
+    SELECT NVL(MAX(BONUM),0) FROM BOARD
+    </select>
+    
+   <!--  게시글 상세페이지 -->
+    <select id="boardView" resultMap="board" parameterType="int">
+    SELECT * FROM BOARD WHERE BONUM=#{bonum}
+    </select>
+    
+    <!-- 게시글 조회수 올리기 -->
+    <update id="boardHitUp">
+    UPDATE BOARD SET BOHIT=BOHIT+1 WHERE BONUM=#{bonum}
+    </update>    
+    
+    <!-- 상세페이지 수정 -->
+    <update id="boardUpdate" parameterType="com.TeamProjects.dto.BoardDTO">
+    UPDATE BOARD SET BOTITLE=#{botitle}, BOCONTENT=#{bocontent} WHERE BONUM=#{bonum}
+    </update>
+    
+    <!-- 상세페이지 삭제 -->
+    <delete id="boardDelete" parameterType="int">
+    DELETE FROM BOARD WHERE BONUM=#{bonum}
+    </delete>
+    
+    <!-- 게시글 검색 -->
+    <select id="boardSearch" resultMap="board">
+      SELECT BOARD.*,STORE.MARKETNAME FROM BOARD,STORE WHERE BOARD.STCODE = STORE.STCODE 
+     
+     <if test ="botype=='공지' &amp;&amp; searchtype=='searchbotitle'">
+     AND (BOTITLE LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '공지') 
+     </if> 
+     
+      <if test ="botype=='공지' &amp;&amp; searchtype=='searchbowriter'">
+      AND (BOWRITER LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '공지')
+     </if> 
+     
+      <if test ="botype=='공지' &amp;&amp; searchtype=='searchbodate'">
+      AND (BODATE LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '공지')
+     </if> 
+     
+     <if test ="botype=='공지' &amp;&amp; searchtype=='searchmarketname'">
+      AND (MARKETNAME LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '공지')
+     </if> 
+     
+     
+     <if test ="botype=='후기' &amp;&amp; searchtype=='searchbotitle'">
+     AND (BOTITLE LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '후기') 
+     </if> 
+     
+      <if test ="botype=='후기' &amp;&amp; searchtype=='searchbowriter'">
+      AND (BOWRITER LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '공지후기')
+     </if> 
+     
+      <if test ="botype=='후기' &amp;&amp; searchtype=='searchbodate'">
+      AND (BODATE LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '후기')
+     </if> 
+     
+     <if test ="botype=='후기' &amp;&amp; searchtype=='searchmarketname'">
+      AND (MARKETNAME LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '후기')
+     </if> 
+     
+     
+     <if test ="botype=='자유' &amp;&amp; searchtype=='searchbotitle'">
+     AND (BOTITLE LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '자유') 
+     </if> 
+     
+      <if test ="botype=='자유' &amp;&amp; searchtype=='searchbowriter'">
+      AND (BOWRITER LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '자유')
+     </if> 
+     
+      <if test ="botype=='자유' &amp;&amp; searchtype=='searchbodate'">
+      AND (BODATE LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '자유')
+     </if> 
+     
+     <if test ="botype=='자유' &amp;&amp; searchtype=='searchmarketname'">
+      AND (MARKETNAME LIKE '%'||#{keyword}||'%' AND BOTYPE LIKE '자유')
+     </if> 
+    </select>
+   
+   <!-- 좋아요 -->
+   <update id="insertBorecommend" parameterType="com.TeamProjects.dto.BoardDTO">
+    UPDATE BOARD SET BORECOMMEND=BORECOMMEND+1 WHERE BONUM=#{bonum}
+    </update> 
+    
+    <!-- 좋아요 숫자 가져오기 -->
+    <select id="selectBorecommend" resultType="int">
+    SELECT BORECOMMEND FROM BOARD WHERE BONUM = #{bonum}
+    </select>
+    
+   
+    
+  
+     
+   <resultMap type="com.TeamProjects.dto.BoardDTO" id="board">
+      <result property="bonum" column="BONUM" />
+      <result property="stcode" column="STCODE" />
+      <result property="botitle" column="BOTITLE" />
+      <result property="bowriter" column="BOWRITER" />
+      <result property="bocontent" column="BOCONTENT" />
+      <result property="bodate" column="BODATE" />
+      <result property="bohit" column="BOHIT" />
+      <result property="borecommend" column="BORECOMMEND" />
+      <result property="bofilename" column="BOFILENAME" />
+      <result property="borank" column="BORANK" />
+      <result property="botype" column="BOTYPE" />
+         <result property="areaname" column="AREANAME" />
+         <result property="staddress" column="STADDRESS" />
+         <result property="marketname" column="MARKETNAME" />
+     </resultMap> 
+  </mapper>
